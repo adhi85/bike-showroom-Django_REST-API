@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer
 from django.contrib.auth import login
@@ -11,6 +12,18 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 
 # Register API
+
+@api_view(['GET'])
+def Routes(request):
+    routes = [
+        'GET /api/',
+        'All OPERATIONS',
+        'login: login user',
+        'register: register a user',
+        
+        
+    ]
+    return Response (routes)
 
 def home(request):
     return render(request, 'base/home.html')
