@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import bikes, Category
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
@@ -18,3 +19,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
 
         return user
+
+#category 
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('__all__')
+
+class bikesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = bikes
+        fields = ('__all__')

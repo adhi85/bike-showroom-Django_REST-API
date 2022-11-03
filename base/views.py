@@ -1,11 +1,11 @@
 from django.shortcuts import render
-
+from .models import bikes,Category
 # Create your views here.
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer
+from .serializers import UserSerializer, RegisterSerializer,bikesSerializer,CategorySerializer
 from django.contrib.auth import login
 
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -51,3 +51,26 @@ class LoginAPI(KnoxLoginView):
         user = serializer.validated_data['user']
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
+
+class bikesList(generics.ListCreateAPIView):
+    serializer_class = bikesSerializer
+
+    def get_queryset(self):
+        queryset = bikes.objects.all()
+        category = self.request.query_params.get('category')
+        if category is not None:
+            queryset = queryset.filter(bikeCategory = category)
+        return queryset
+
+class bikesDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = bikesSerializer
+    queryset = bikes.objects.all()
+    
+
+class categoryList(generics.ListCreateAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+class categoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
