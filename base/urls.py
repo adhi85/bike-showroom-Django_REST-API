@@ -15,5 +15,9 @@ urlpatterns = [
     path('api/bikes/<str:pk>/', views.bikesDetail.as_view(),name="bikesDetail"),
     path('api/category/', views.categoryList.as_view(),name="categoryList"),
     path('api/category/<str:pk>/', views.categoryDetail.as_view(),name="categoryDetail"),
+
+    path('api/carts', views.ListCart.as_view(),name="allcarts"),
+    path('api/carts/<str:pk>', views.DetailCart.as_view(),name="cartdetail"),
+
     
 ]
