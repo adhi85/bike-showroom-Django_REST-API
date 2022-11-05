@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from .models import bikes,Category,Cart
+from .models import bikes, Category, Cart
 from django.contrib.auth.models import User
 # Create your views here.
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer,bikesSerializer,CategorySerializer,CartSerializer
+from .serializers import UserSerializer, RegisterSerializer, bikesSerializer, CategorySerializer, CartSerializer
 from django.contrib.auth import login
 
 from django.contrib.auth.decorators import login_required
@@ -16,12 +16,9 @@ from knox.views import LoginView as KnoxLoginView
 from rest_framework.decorators import permission_classes
 
 
-
-# Register API
-
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def Routes(request):  
+def Routes(request):
     routes = [
         'GET /api/',
         'All OPERATIONS',
@@ -34,15 +31,18 @@ def Routes(request):
         'api/category/<str:pk>: View specific bike category and update it ',
         'api/carts: View all carts of all users and the bikes they purchased ',
         'api/carts/<str:pk>: View the cart of a specific user and purchase bikes and view the warranty left.==> The bikes which the user has purchased ',
-        
-        
+
+
 
     ]
-    return Response (routes)
+    return Response(routes)
 
 
 def home(request):
     return render(request, 'base/home.html')
+
+# Register API
+
 
 class RegisterAPI(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
@@ -53,10 +53,9 @@ class RegisterAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-        "user": UserSerializer(user, context=self.get_serializer_context()).data,
-        "token": AuthToken.objects.create(user)[1]
+            "user": UserSerializer(user, context=self.get_serializer_context()).data,
+            "token": AuthToken.objects.create(user)[1]
         })
-
 
 
 class LoginAPI(KnoxLoginView):
@@ -69,6 +68,7 @@ class LoginAPI(KnoxLoginView):
         login(request, user)
         return super(LoginAPI, self).post(request, format=None)
 
+
 class bikesList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = bikesSerializer
@@ -77,41 +77,42 @@ class bikesList(generics.ListCreateAPIView):
         queryset = bikes.objects.all()
         category = self.request.query_params.get('category')
         if category is not None:
-            queryset = queryset.filter(bikeCategory = category)
+            queryset = queryset.filter(bikeCategory=category)
         return queryset
+
 
 class bikesDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = bikesSerializer
     queryset = bikes.objects.all()
-    
+
 
 class categoryList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
+
 class categoryDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
-        
+
 class ListCart(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
+
 class DetailCart(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     queryset = Cart.objects.all()
-    serializer_class = CartSerializer 
+    serializer_class = CartSerializer
 
 
-
-
-#OLD CODE
+# OLD CODE
 
 # @api_view(['GET'])
 # def purchaseList(request):
