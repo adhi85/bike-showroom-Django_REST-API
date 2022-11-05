@@ -33,7 +33,7 @@ def Routes(request):
         'api/category: View all the bike categories',
         'api/category/<str:pk>: View specific bike category and update it ',
         'api/carts: View all carts of all users and the bikes they purchased ',
-        'api/carts/<str:pk>: View the cart of a specific user and purchase bikes.==> The bikes which the user has purchased ',
+        'api/carts/<str:pk>: View the cart of a specific user and purchase bikes and view the warranty left.==> The bikes which the user has purchased ',
         
         
 
